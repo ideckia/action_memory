@@ -66,7 +66,7 @@ class Memory extends IdeckiaAction {
 				textSize: props.item_text_size,
 				actions: [
 					{
-						name: 'memory-item',
+						name: '_memory-item',
 						props: {
 							index: values.length,
 							initCallback: itemInitCallback,
