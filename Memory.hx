@@ -9,30 +9,12 @@ typedef Props = {
 	var columns:UInt;
 	@:editable("Item text size", 30)
 	var item_text_size:UInt;
-	@:editable("Name of the parent directory", {
-		toDir: "_main_",
-		text: "back",
-		textSize: null,
-		textColor: null,
-		textPosition: null,
-		icon: "folder",
-		bgColor: "ffff0000"
-	})
-	var parent_dir_state:{
-		toDir:String,
-		text:String,
-		textSize:UInt,
-		textColor:String,
-		textPosition:TextPosition,
-		icon:String,
-		bgColor:String
-	};
 }
 
 @:name("memory")
 @:description("A memory game")
 class Memory extends IdeckiaAction {
-	static var BACK = Macros.getImageData('back.jpg');
+	static var BACK = ImageData.embed('back.jpg');
 	static inline var MATCH_COLOR = 'ff009900';
 
 	var flipped = [];
@@ -41,7 +23,9 @@ class Memory extends IdeckiaAction {
 	var childActions:Map<UInt, ItemState->Void> = [];
 
 	override public function init(initialState:ItemState):js.lib.Promise<ItemState> {
-		getImageData('back.jpg');
+		var runtimeBack = ImageData.get('back.jpg');
+		if (runtimeBack != null)
+			BACK = runtimeBack;
 		return super.init(initialState);
 	}
 
@@ -79,8 +63,6 @@ class Memory extends IdeckiaAction {
 			values.push(nums[valIndex]);
 			nums.splice(valIndex, 1);
 		}
-		if (props.parent_dir_state != null)
-			items.unshift(cast props.parent_dir_state);
 
 		var dynamicDir = {
 			rows: props.rows,
@@ -129,12 +111,5 @@ class Memory extends IdeckiaAction {
 		}
 
 		return js.lib.Promise.resolve(new ActionOutcome({state: state}));
-	}
-
-	public static function getImageData(name:String) {
-		var filePath:String = haxe.io.Path.join([js.Node.__dirname, name]);
-
-		if (sys.FileSystem.exists(filePath))
-			BACK = haxe.crypto.Base64.encode(sys.io.File.getBytes(filePath));
 	}
 }
