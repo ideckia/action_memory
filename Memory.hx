@@ -1,5 +1,7 @@
 package;
 
+import api.action.Data;
+
 using api.IdeckiaApi;
 
 typedef Props = {
@@ -14,7 +16,7 @@ typedef Props = {
 @:name("memory")
 @:description("A memory game")
 class Memory extends IdeckiaAction {
-	static var BACK = ImageData.embed('back.jpg');
+	static var BACK = Data.embedBase64('back.jpg');
 	static inline var MATCH_COLOR = 'ff009900';
 
 	var flipped = [];
@@ -23,7 +25,7 @@ class Memory extends IdeckiaAction {
 	var childActions:Map<UInt, ItemState->Void> = [];
 
 	override public function init(initialState:ItemState):js.lib.Promise<ItemState> {
-		var runtimeBack = ImageData.get('back.jpg');
+		var runtimeBack = Data.getBase64('back.jpg');
 		if (runtimeBack != null)
 			BACK = runtimeBack;
 		return super.init(initialState);

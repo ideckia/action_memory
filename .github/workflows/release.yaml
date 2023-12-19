@@ -33,24 +33,25 @@ jobs:
     - name: Compile main project
       run: haxe deploy.hxml
 
-    - name: Package main to release
+    - name: Create main directory to release
       run: |
         mkdir ${{ env.MAIN_CMD_NAME }}
         mv index.js ${{ env.MAIN_CMD_NAME }}
         mv presets.json ${{ env.MAIN_CMD_NAME }}
         mv readme.md ${{ env.MAIN_CMD_NAME }}
         echo '{"repository": "http://github.com/${{ github.repository }}","filename": "${{ env.MAIN_CMD_NAME }}.zip","version": "${{ github.ref_name }}"}' > ${{ env.MAIN_CMD_NAME }}/.info
-        zip -r ${{ env.MAIN_CMD_NAME }} ${{ env.MAIN_CMD_NAME }}
 
     - name: Compile item project
       run: haxe deploy_item.hxml
 
-    - name: Package item to release
+    - name: Create item directory to release
       run: |
         mkdir ${{ env.ITEM_CMD_NAME }}
         mv item/index.js ${{ env.ITEM_CMD_NAME }}
-        echo '{"repository": "http://github.com/${{ github.repository }}","filename": "${{ env.ITEM_CMD_NAME }}.zip","version": "${{ github.ref_name }}"}' > ${{ env.ITEM_CMD_NAME }}/.info
-        zip -r ${{ env.ITEM_CMD_NAME }} ${{ env.ITEM_CMD_NAME }}
+
+    - name: Package release
+      run: |
+        zip -r ${{ env.MAIN_CMD_NAME }} ${{ env.MAIN_CMD_NAME }} ${{ env.ITEM_CMD_NAME }}
 
     - name: Release
       uses: "marvinpinto/action-automatic-releases@latest"
@@ -59,6 +60,5 @@ jobs:
         prerelease: false
         files: |
           ${{ env.MAIN_CMD_NAME }}.zip
-          ${{ env.ITEM_CMD_NAME }}.zip
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
