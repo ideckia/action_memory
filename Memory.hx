@@ -23,6 +23,7 @@ class Memory extends IdeckiaAction {
 	var values = [];
 	var matched = [];
 	var childActions:Map<UInt, ItemState->Void> = [];
+	var paused = false;
 
 	override public function init(initialState:ItemState):js.lib.Promise<ItemState> {
 		var runtimeBack = Data.getBase64('back.jpg');
@@ -33,6 +34,7 @@ class Memory extends IdeckiaAction {
 
 	public function execute(currentState:ItemState):js.lib.Promise<ActionOutcome> {
 		var items:Array<DynamicDirItem> = [];
+		paused = false;
 		var numValues = props.rows * props.columns - 2;
 		if (numValues % 2 == 1)
 			numValues++;
@@ -81,30 +83,57 @@ class Memory extends IdeckiaAction {
 	}
 
 	function itemExecuteCallback(index:UInt, state:ItemState):js.lib.Promise<ActionOutcome> {
-		if (!matched.contains(index)) {
-			if (flipped.length == 2 && flipped.contains(index)) {
-				flipped.remove(index);
-				state.icon = BACK;
-				state.text = '';
-			} else if (flipped.length < 2) {
+		if (!paused && !matched.contains(index)) {
+			if (flipped.length == 0) {
 				state.icon = null;
 				state.text = Std.string(values[index]);
-				if (values[flipped[0]] == values[index]) {
-					matched.push(flipped[0]);
-					matched.push(index);
-					childActions.get(flipped[0])({
+				flipped.push(index);
+			} else if (flipped.length == 1) {
+				if (flipped.contains(index)) {
+					flipped.remove(index);
+					state.icon = BACK;
+					state.text = '';
+				} else {
+					state.icon = null;
+					state.text = Std.string(values[index]);
+					flipped.push(index);
+				}
+			}
+
+			if (flipped.length == 2) {
+				var flipped0 = flipped[0];
+				var updateChildState0 = childActions.get(flipped0);
+				var flipped1 = flipped[1];
+				var updateChildState1 = childActions.get(flipped1);
+				var currentMatched = values[flipped0] == values[flipped1];
+				if (currentMatched) {
+					matched.push(flipped0);
+					matched.push(flipped1);
+					updateChildState0({
 						icon: null,
-						text: Std.string(values[flipped[0]]),
+						text: Std.string(values[flipped0]),
 						bgColor: MATCH_COLOR
 					});
-					childActions.get(index)({
+					updateChildState1({
 						icon: null,
-						text: Std.string(values[index]),
+						text: Std.string(values[flipped1]),
 						bgColor: MATCH_COLOR
 					});
 					flipped = [];
 				} else {
-					flipped.push(index);
+					paused = true;
+					haxe.Timer.delay(() -> {
+						updateChildState0({
+							icon: BACK,
+							text: ''
+						});
+						updateChildState1({
+							icon: BACK,
+							text: ''
+						});
+						flipped = [];
+						paused = false;
+					}, 1000);
 				}
 			}
 			if (matched.length == values.length) {
