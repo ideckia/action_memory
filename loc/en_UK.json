@@ -1,0 +1,30 @@
+[
+	{
+		"id": "action_description",
+		"text": "A memory game"
+	},
+	{
+		"id": "item_action_description",
+		"text": "A memory game item"
+	},
+	{
+		"id": "prop_rows",
+		"text": "Rows"
+	},
+	{
+		"id": "prop_columns",
+		"text": "Columns"
+	},
+	{
+		"id": "prop_item_text_size",
+		"text": "Item text size"
+	},
+	{
+		"id": "congrats_title",
+		"text": "Congratulations!"
+	},
+	{
+		"id": "congrats_body",
+		"text": "You matched all the pairs!"
+	}
+]

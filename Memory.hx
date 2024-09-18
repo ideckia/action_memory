@@ -1,20 +1,19 @@
 package;
 
-import api.action.Data;
-
 using api.IdeckiaApi;
 
 typedef Props = {
-	@:editable("Rows", 3)
+	@:editable("prop_rows", 3)
 	var rows:UInt;
-	@:editable("Columns", 3)
+	@:editable("prop_columns", 3)
 	var columns:UInt;
-	@:editable("Item text size", 30)
+	@:editable("prop_item_text_size", 30)
 	var item_text_size:UInt;
 }
 
 @:name("memory")
-@:description("A memory game")
+@:description("action_description")
+@:localize
 class Memory extends IdeckiaAction {
 	static var BACK = Data.embedBase64('back.jpg');
 	static inline var MATCH_COLOR = 'ff009900';
@@ -26,7 +25,7 @@ class Memory extends IdeckiaAction {
 	var paused = false;
 
 	override public function init(initialState:ItemState):js.lib.Promise<ItemState> {
-		var runtimeBack = Data.getBase64('back.jpg');
+		var runtimeBack = core.data.getBase64('back.jpg');
 		if (runtimeBack != null)
 			BACK = runtimeBack;
 		return super.init(initialState);
@@ -137,7 +136,7 @@ class Memory extends IdeckiaAction {
 				}
 			}
 			if (matched.length == values.length) {
-				server.dialog.info('Congratulations!', 'You matched all the pairs!');
+				core.dialog.info(Loc.congrats_title.tr(), Loc.congrats_body.tr());
 			}
 		}
 

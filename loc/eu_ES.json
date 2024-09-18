@@ -1,0 +1,30 @@
+[
+	{
+		"id": "action_description",
+		"text": "Memoria jokoa"
+	},
+	{
+		"id": "item_action_description",
+		"text": "Memoria jokoko item-a"
+	},
+	{
+		"id": "prop_rows",
+		"text": "Errenkadak"
+	},
+	{
+		"id": "prop_columns",
+		"text": "Zutabeak"
+	},
+	{
+		"id": "prop_item_text_size",
+		"text": "Objektuen testu tamaina"
+	},
+	{
+		"id": "congrats_title",
+		"text": "Zorionak!"
+	},
+	{
+		"id": "congrats_body",
+		"text": "Bikote guztiak aurkitu dituzu!"
+	}
+]

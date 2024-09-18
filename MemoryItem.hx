@@ -9,10 +9,11 @@ typedef Props = {
 }
 
 @:name("memory-item")
-@:description("A memory game item")
+@:description("item_action_description")
+@:localize
 class MemoryItem extends IdeckiaAction {
 	override public function init(initialState:ItemState):js.lib.Promise<ItemState> {
-		props.initCallback(props.index, server.updateClientState);
+		props.initCallback(props.index, core.updateClientState);
 		return super.init(initialState);
 	}
 
