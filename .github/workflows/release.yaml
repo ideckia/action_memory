@@ -39,7 +39,7 @@ jobs:
         mv index.js ${{ env.MAIN_CMD_NAME }}
         mv presets.json ${{ env.MAIN_CMD_NAME }}
         mv readme.md ${{ env.MAIN_CMD_NAME }}
-        mv loc ${{ env.CMD_NAME }}
+        cp -r loc ${{ env.MAIN_CMD_NAME }}
         echo '{"repository": "http://github.com/${{ github.repository }}","filename": "${{ env.MAIN_CMD_NAME }}.zip","version": "${{ github.ref_name }}"}' > ${{ env.MAIN_CMD_NAME }}/.info
 
     - name: Compile item project
@@ -48,7 +48,7 @@ jobs:
     - name: Create item directory to release
       run: |
         mkdir ${{ env.ITEM_CMD_NAME }}
-        mv loc ${{ env.CMD_NAME }}
+        cp -r loc ${{ env.ITEM_CMD_NAME }}
         mv item/index.js ${{ env.ITEM_CMD_NAME }}
 
     - name: Package release
