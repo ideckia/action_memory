@@ -13,7 +13,7 @@ jobs:
     env:
       MAIN_CMD_NAME: memory
       ITEM_CMD_NAME: _memory-item
-      HAXE_VERSION: latest
+      HAXE_VERSION: 4.2.4
       NODE_VERSION: 16
 
     steps:
